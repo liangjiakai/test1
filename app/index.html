@@ -1,8 +1,124 @@
 <html>
+
 	<head>
-		
+		<meta charset="UTF-8">
+		<title>逛族</title>
+		<link rel="stylesheet" type="text/css" href="css/index.css" />
+		<link rel="stylesheet" type="text/css" href="https://at.alicdn.com/t/font_591303_b7jp12kcgzh3erk9.css" />
+		<style type="text/css">
+			[v-cloak] {
+				display: none;
+			}
+		</style>
 	</head>
+
 	<body>
-		<script type="text/javascript" src=""></script>
+		<div id="app" v-cloak="">
+			<div class="info-box">
+				<!--电话号码输入弹窗-->
+				<div class="win" v-show="winShow">
+					<div class="btn-box clearfix">
+						<div class="cancel btn fl" @click="cancel()">cancel</div>
+						<div class="done btn fr" @click="done()">done</div>
+					</div>
+					<div class="phone-win">
+						<textarea v-model="tel" placeholder="Add your phone number" /></textarea>
+					</div>
+				</div>
+				<!--电话号码-->
+				<p>
+					<span>Phone Number<sup><i class="iconfont my-icon" :class="inp==false?'icon-xingxing':'icon-dian'"></i></sup>: </span><span @click="win()">{{phoneNum}}</span>
+				</p>
+				<!--生日日期-->
+				<p>
+					<span>Brithdate<sup><i class="iconfont my-icon" :class="inp==false?'icon-xingxing':'icon-dian'"></i></sup>: </span><span>{{Brithdate}}</span>
+					<input type="date" v-model="Brithdate" class="my-input" placeholder="Add your phone Brithdate" />
+				</p>
+				<!--产业-->
+				<p>
+					<span>Industry<sup><i class="iconfont my-icon" :class="inp==false?'icon-xingxing':'icon-dian'"></i></sup>: </span><span>{{Industry}}</span>
+					<select class="my-select" v-model="Industry">
+						<option value="Apple">Apple</option>
+						<option value="Orange">Orange</option>
+						<option value="Pink">Pink</option>
+					</select>
+				</p>
+				<!--家乡-->
+				<p>
+					<span>Hometown: </span><span>{{Hometown}}</span>
+					<select class="my-select" v-model="Hometown">
+						<option value="Beijing">Beijing</option>
+						<option value="Shanghai">Shanghai</option>
+						<option value="Naijing">Naijing</option>
+					</select>
+				</p>
+				<!--个人性格-->
+				<p>
+					<span>Personality: </span><span>{{Personality}}</span>
+					<select class="my-select" v-model="Personality">
+						<option>Good Boy</option>
+						<option>Bad Girl</option>
+						<option>Beautiful Women</option>
+					</select>
+				</p>
+			</div>
+			<!--数据提交-->
+			<button class="sub fr" @click="sub()">提交</button>
+		</div>
+
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+		<script type="text/javascript">
+			var form = new Vue({
+				el: "#app",
+				data: {
+					phoneNum: "Add your phone phone number",
+					Brithdate: "Add your phone Brithdate",
+					Industry: "Add your phone Industry",
+					Hometown: "Add your phone Hometown",
+					Personality: "Add your phone Personality",
+					tel: "",
+					winShow: false,
+					inp: false,
+				},
+				methods: {
+					win: function() {
+						this.winShow = true;
+					},
+					cancel: function() {
+						this.winShow = false;
+					},
+					done: function() {
+						if(this.checked) {
+							this.phoneNum = this.tel;
+							this.winShow = false;
+							this.inp = true;
+						}
+					},
+					sub: function() {
+						var that = this;
+						axios.post("http://www.test.com/submit_data", {
+							phone: that.phoneNum,
+							birthday: that.Brithdate,
+							industry: that.Industry,
+							hometown: that.Hometown,
+							personality: that.Personality,
+						}).then(function(res) {
+							console.log(res);
+						}).catch(function(error) {
+							console.log(error);
+						})
+					},
+				},
+				computed: {
+					checked: function() {
+						let exp = /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/
+						return exp.test(this.tel);
+					},
+				}
+			});
+		</script>
 	</body>
+
 </html>
